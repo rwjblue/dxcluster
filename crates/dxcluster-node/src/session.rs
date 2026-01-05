@@ -8,8 +8,16 @@ use tokio::io::{AsyncBufReadExt, AsyncRead, AsyncWrite, AsyncWriteExt, BufReader
 
 use crate::state::NodeState;
 
+/// Default callsign applied to anonymous users until proper login flows
+/// are implemented.
 const DEFAULT_CALLSIGN: &str = "ANON";
 
+/// Telnet-style session for a single user connection.
+///
+/// The session owns the TCP stream, reads user commands framed according to
+/// [`dxcluster_wire`] parsing rules, mutates shared [`NodeState`], and
+/// responds with formatted server lines. It keeps track of per-user filters
+/// and callsigns for spot attribution.
 pub struct UserSession<T> {
     stream: T,
     state: NodeState,
@@ -21,6 +29,7 @@ impl<T> UserSession<T>
 where
     T: AsyncRead + AsyncWrite + Unpin + Send + 'static,
 {
+    /// Construct a new session wrapping a TCP stream and shared node state.
     pub fn new(stream: T, state: NodeState) -> Self {
         let callsign =
             Callsign::parse_loose(DEFAULT_CALLSIGN).expect("default callsign should be valid");
@@ -32,6 +41,8 @@ where
         }
     }
 
+    /// Run the session loop until the client disconnects or an IO error is
+    /// encountered.
     pub async fn run(self) -> io::Result<()> {
         let UserSession {
             stream,

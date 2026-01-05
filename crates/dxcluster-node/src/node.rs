@@ -9,6 +9,10 @@ use crate::session::UserSession;
 use crate::state::NodeState;
 use crate::upstream::UpstreamHandle;
 
+/// Runtime entrypoint for embedding a DX Cluster node.
+///
+/// Constructed via [`Node::builder`], the node owns shared state and upstream
+/// configurations and can be spawned to accept user sessions and peer links.
 #[derive(Debug)]
 #[allow(dead_code)]
 pub struct Node {
@@ -16,6 +20,8 @@ pub struct Node {
     upstreams: Vec<UpstreamConfig>,
 }
 
+/// Handle returned from [`NodeBuilder::spawn`] that allows callers to inject
+/// new spots, query the in-memory cache, and trigger graceful shutdown.
 #[derive(Debug)]
 pub struct NodeHandle {
     state: NodeState,
@@ -24,6 +30,7 @@ pub struct NodeHandle {
     tasks: Vec<JoinHandle<()>>,
 }
 
+/// Builder for configuring and launching a node.
 #[derive(Debug)]
 pub struct NodeBuilder {
     config: NodeConfig,
@@ -31,6 +38,7 @@ pub struct NodeBuilder {
 }
 
 impl Node {
+    /// Start building a node with the provided configuration.
     pub fn builder(config: NodeConfig) -> NodeBuilder {
         NodeBuilder {
             config,
@@ -40,11 +48,13 @@ impl Node {
 }
 
 impl NodeBuilder {
+    /// Attach an upstream peer configuration to this node before spawning.
     pub fn with_upstream(mut self, upstream: UpstreamConfig) -> Self {
         self.upstreams.push(upstream);
         self
     }
 
+    /// Spawn the node runtime and return a handle for control and inspection.
     pub async fn spawn(self) -> Result<NodeHandle, NodeError> {
         let state = NodeState::new(self.config.node_id.clone());
         let _ = UpstreamHandle::spawn_all(&self.upstreams);
@@ -62,6 +72,7 @@ impl NodeBuilder {
 }
 
 impl NodeHandle {
+    /// Initiate a graceful shutdown and wait for background tasks to finish.
     pub async fn shutdown(self) {
         let _ = self.shutdown.send(());
         for task in self.tasks {
@@ -69,10 +80,12 @@ impl NodeHandle {
         }
     }
 
+    /// Insert a spot directly into the node state, useful for tests.
     pub async fn inject_spot(&self, spot: Spot) {
         self.state.insert(spot).await;
     }
 
+    /// Fetch the `n` most recent spots currently stored in memory.
     pub async fn recent_spots(&self, n: usize) -> Vec<Spot> {
         self.state.recent(n).await
     }
