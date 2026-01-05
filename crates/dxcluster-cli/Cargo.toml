@@ -6,5 +6,7 @@ edition = "2024"
 [dependencies]
 dxcluster-client = { path = "../dxcluster-client" }
 dxcluster-wire = { path = "../dxcluster-wire" }
+dxcluster-types = { path = "../dxcluster-types" }
 tokio = { workspace = true }
 anyhow = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
