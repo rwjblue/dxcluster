@@ -5,7 +5,7 @@ A Rust workspace for experimenting with DX cluster-style radio spot distribution
 ## Workspace layout
 All crates live under the [`crates/`](crates) directory:
 
-- `dxcluster-types`: primitives such as callsigns, bands, frequencies, and identifiers.
+- `dxcluster-types`: primitives such as callsigns, bands, frequencies, and identifiers (including band mappings from 160m through 70cm).
 - `dxcluster-model`: domain models and pure business logic for spots, caching, and filtering.
 - `dxcluster-wire`: parsing and formatting for user- and peer-facing protocols.
 - `dxcluster-client`: async clients for telnet-style and peer connections.
