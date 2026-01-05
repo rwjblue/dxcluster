@@ -7,6 +7,7 @@ use crate::state::NodeState;
 use crate::upstream::UpstreamHandle;
 
 #[derive(Debug)]
+#[allow(dead_code)]
 pub struct Node {
     state: NodeState,
     upstreams: Vec<UpstreamConfig>,
