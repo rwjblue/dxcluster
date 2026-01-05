@@ -1,0 +1,17 @@
+[package]
+name = "dxcluster-client"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["stream"]
+stream = ["dep:futures"]
+reconnect = []
+
+[dependencies]
+dxcluster-wire = { path = "../dxcluster-wire" }
+dxcluster-types = { path = "../dxcluster-types" }
+tokio = { workspace = true, optional = false }
+tokio-util = { workspace = true, optional = true }
+futures = { workspace = true, optional = true }
+thiserror = { workspace = true, optional = false }

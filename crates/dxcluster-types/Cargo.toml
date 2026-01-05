@@ -1,0 +1,15 @@
+[package]
+name = "dxcluster-types"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["hash_blake3", "time"]
+strict_callsign = []
+hash_blake3 = ["blake3"]
+time = ["dep:time"]
+
+[dependencies]
+thiserror = { workspace = true }
+blake3 = { workspace = true, optional = true }
+time = { workspace = true, optional = true }

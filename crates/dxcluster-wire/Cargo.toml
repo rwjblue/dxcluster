@@ -1,0 +1,14 @@
+[package]
+name = "dxcluster-wire"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = []
+compat_dxspider = []
+peer_protocol_v1 = []
+
+[dependencies]
+dxcluster-types = { path = "../dxcluster-types" }
+dxcluster-model = { path = "../dxcluster-model" }
+thiserror = { workspace = true }

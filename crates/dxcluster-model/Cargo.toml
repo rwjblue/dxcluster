@@ -1,0 +1,16 @@
+[package]
+name = "dxcluster-model"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["time"]
+serde = ["dep:serde", "dxcluster-types/time"]
+rate_limit = []
+time = ["dxcluster-types/time", "dep:time"]
+
+[dependencies]
+dxcluster-types = { path = "../dxcluster-types" }
+serde = { workspace = true, optional = true }
+time = { workspace = true, optional = true }
+thiserror = { workspace = true }
