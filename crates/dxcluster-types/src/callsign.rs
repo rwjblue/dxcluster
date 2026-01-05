@@ -1,3 +1,5 @@
+use std::{fmt, str::FromStr};
+
 use crate::error::CallsignError;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -39,5 +41,19 @@ impl Callsign {
 
     pub fn as_str(&self) -> &str {
         &self.0
+    }
+}
+
+impl fmt::Display for Callsign {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+impl FromStr for Callsign {
+    type Err = CallsignError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Callsign::parse_loose(s)
     }
 }
