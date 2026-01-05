@@ -36,7 +36,7 @@ where
         Self {
             stream,
             state,
-            filter: Filter::default(),
+            filter: Filter,
             callsign,
         }
     }
