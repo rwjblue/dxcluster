@@ -1,3 +1,5 @@
+use std::fmt;
+
 use crate::frequency::FrequencyHz;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -22,5 +24,19 @@ impl Band {
             28000000..=29700000 => Some(Band::Meter10),
             _ => None,
         }
+    }
+}
+
+impl fmt::Display for Band {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let label = match self {
+            Band::Meter160 => "160m",
+            Band::Meter80 => "80m",
+            Band::Meter40 => "40m",
+            Band::Meter20 => "20m",
+            Band::Meter15 => "15m",
+            Band::Meter10 => "10m",
+        };
+        f.write_str(label)
     }
 }

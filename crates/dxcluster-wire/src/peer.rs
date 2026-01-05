@@ -21,18 +21,25 @@ impl PeerFrame {
         let mut parts = trimmed.split('|');
         match parts.next() {
             Some("HELLO") => {
-                let node_id = NodeId(parts.next().unwrap_or_default().to_string());
+                let Some(node_id) = parts.next() else {
+                    return Err(PeerParseError::Missing("node id"));
+                };
                 let version = parts.next().unwrap_or("1").to_string();
-                Ok(PeerFrame::Hello { node_id, version })
+                Ok(PeerFrame::Hello {
+                    node_id: NodeId(node_id.to_string()),
+                    version,
+                })
             }
-            Some("PING") => Ok(PeerFrame::Ping {
-                nonce: parts.next().unwrap_or_default().to_string(),
-            }),
-            Some("PONG") => Ok(PeerFrame::Pong {
-                nonce: parts.next().unwrap_or_default().to_string(),
-            }),
-            Some("SPOT") => Err(PeerParseError::Invalid),
-            _ => Err(PeerParseError::Invalid),
+            Some("PING") => {
+                let nonce = parts.next().unwrap_or_default().to_string();
+                Ok(PeerFrame::Ping { nonce })
+            }
+            Some("PONG") => {
+                let nonce = parts.next().unwrap_or_default().to_string();
+                Ok(PeerFrame::Pong { nonce })
+            }
+            Some("SPOT") => Err(PeerParseError::Unknown),
+            _ => Err(PeerParseError::Unknown),
         }
     }
 
