@@ -24,4 +24,4 @@ All crates live under the [`crates/`](crates) directory:
 
 ## Next steps
 
-The current code provides a skeleton that matches the proposed API surface. Future work includes fleshing out the parsing/formatting logic, implementing runtime behaviors in the node, and expanding CLI commands beyond the basic connectivity stubs.
+The node now accepts TCP user sessions with banner/prompt framing and can ingest or query spots via the `dxcluster-wire` user protocol. Upcoming work focuses on peer links, authentication, and richer filtering plus history management across restarts.
