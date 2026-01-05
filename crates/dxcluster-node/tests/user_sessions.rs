@@ -50,7 +50,7 @@ async fn user_can_submit_and_query_spot() {
         .expect("write dx command");
 
     let spot_line = read_line(&mut reader1).await;
-    assert!(spot_line.contains("DX de ANON"));
+    assert!(spot_line.contains("DX de N0CALL"));
     assert!(spot_line.contains("K1ABC"));
     read_line(&mut reader1).await; // prompt
 

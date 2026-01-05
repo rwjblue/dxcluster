@@ -10,7 +10,10 @@ use crate::state::NodeState;
 
 /// Default callsign applied to anonymous users until proper login flows
 /// are implemented.
-const DEFAULT_CALLSIGN: &str = "ANON";
+///
+/// The value must be valid even when the strict callsign feature is enabled
+/// (requires at least one digit), so we include a zero.
+const DEFAULT_CALLSIGN: &str = "N0CALL";
 
 /// Telnet-style session for a single user connection.
 ///
