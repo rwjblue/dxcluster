@@ -1,0 +1,11 @@
+[package]
+name = "dxcluster-node-bin"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+dxcluster-node = { path = "../dxcluster-node" }
+tracing-subscriber = "0.3"
+dxcluster-types = { path = "../dxcluster-types" }
+tokio = { workspace = true }
+anyhow = { workspace = true }

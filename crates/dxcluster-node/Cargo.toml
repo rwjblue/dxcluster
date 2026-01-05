@@ -1,0 +1,17 @@
+[package]
+name = "dxcluster-node"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = []
+metrics = []
+admin = []
+
+[dependencies]
+dxcluster-model = { path = "../dxcluster-model" }
+dxcluster-wire = { path = "../dxcluster-wire" }
+dxcluster-types = { path = "../dxcluster-types" }
+tokio = { workspace = true }
+tracing = { workspace = true }
+thiserror = { workspace = true }
