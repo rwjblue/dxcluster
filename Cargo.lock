@@ -110,6 +110,7 @@ dependencies = [
  "dxcluster-types",
  "dxcluster-wire",
  "thiserror",
+ "time",
  "tokio",
  "tracing",
 ]
