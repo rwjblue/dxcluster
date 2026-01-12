@@ -159,10 +159,10 @@ async fn should_forward(
     remote_id: &Arc<RwLock<Option<NodeId>>>,
     announcement: &SpotAnnouncement,
 ) -> bool {
-    if let Some(source) = &announcement.source {
-        if let Some(remote) = remote_id.read().await.as_ref() {
-            return source != remote;
-        }
+    if let Some(source) = &announcement.source
+        && let Some(remote) = remote_id.read().await.as_ref()
+    {
+        return source != remote;
     }
     true
 }
@@ -182,13 +182,13 @@ async fn handle_frame(
         }
         PeerFrame::Capabilities { .. } => {}
         PeerFrame::Auth { token } => {
-            if let Some(expected) = expected_auth_token {
-                if token != expected {
-                    return Err(io::Error::new(
-                        io::ErrorKind::PermissionDenied,
-                        "auth failed",
-                    ));
-                }
+            if let Some(expected) = expected_auth_token
+                && token != expected
+            {
+                return Err(io::Error::new(
+                    io::ErrorKind::PermissionDenied,
+                    "auth failed",
+                ));
             }
             auth_ok.store(true, Ordering::Relaxed);
         }
