@@ -177,6 +177,38 @@ mod tests {
     }
 
     #[test]
+    fn parses_login_command() {
+        let cli = Cli::parse_from([
+            "dxcluster-cli",
+            "--addr",
+            "cluster.example:7300",
+            "--callsign",
+            "n0call",
+            "login",
+        ]);
+
+        assert!(matches!(cli.command, Commands::Login));
+        assert_eq!(cli.callsign.as_deref(), Some("n0call"));
+        assert_eq!(cli.addr, "cluster.example:7300");
+    }
+
+    #[test]
+    fn parses_list_command() {
+        let cli = Cli::parse_from(["dxcluster-cli", "list"]);
+
+        assert!(matches!(cli.command, Commands::List));
+        assert_eq!(cli.addr, "127.0.0.1:7300");
+    }
+
+    #[test]
+    fn parses_watch_command() {
+        let cli = Cli::parse_from(["dxcluster-cli", "--addr", "127.0.0.1:7301", "watch"]);
+
+        assert!(matches!(cli.command, Commands::Watch));
+        assert_eq!(cli.addr, "127.0.0.1:7301");
+    }
+
+    #[test]
     fn spot_args_convert_to_command() {
         let args = SpotArgs {
             dx: String::from("n0call"),
