@@ -34,3 +34,14 @@ fn capabilities_round_trip() {
     let parsed = PeerFrame::parse(&line).expect("parse frame");
     assert_eq!(parsed, frame);
 }
+
+#[test]
+fn spot_frame_comment_escapes_pipe() {
+    let mut spot = sample_spot();
+    spot.comment = "pipe | percent % ok".to_string();
+    let frame = PeerFrame::Spot { spot };
+    let line = frame.to_line();
+    assert!(line.contains("%7C"));
+    let parsed = PeerFrame::parse(&line).expect("parse frame");
+    assert_eq!(parsed, frame);
+}

@@ -105,7 +105,7 @@ impl PeerFrame {
                         freq,
                         dx,
                         spotter,
-                        comment: comment.to_string(),
+                        comment: unescape_comment(comment),
                         origin,
                         hop,
                     },
@@ -139,7 +139,7 @@ impl PeerFrame {
                 spot.freq.0,
                 spot.dx.as_str(),
                 spot.spotter.as_str(),
-                spot.comment,
+                escape_comment(&spot.comment),
                 spot.origin.as_ref().map(|id| id.0.as_str()).unwrap_or(""),
                 spot.hop,
             ),
@@ -165,4 +165,12 @@ fn parse_spot_id(input: &str) -> Result<SpotId, PeerParseError> {
         bytes[idx] = u8::from_str_radix(hex, 16).map_err(|_| PeerParseError::Invalid("spot id"))?;
     }
     Ok(SpotId(bytes))
+}
+
+fn escape_comment(comment: &str) -> String {
+    comment.replace('%', "%25").replace('|', "%7C")
+}
+
+fn unescape_comment(comment: &str) -> String {
+    comment.replace("%7C", "|").replace("%25", "%")
 }

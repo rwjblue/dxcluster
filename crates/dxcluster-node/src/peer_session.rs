@@ -40,6 +40,7 @@ impl PeerSession {
         let (tx, mut rx) = mpsc::unbounded_channel::<PeerFrame>();
         let remote_id = Arc::new(RwLock::new(None::<NodeId>));
         let auth_ok = Arc::new(AtomicBool::new(self.options.expected_auth_token.is_none()));
+        let initial_sync_sent = Arc::new(AtomicBool::new(false));
 
         let writer_task = tokio::spawn(async move {
             let mut writer = writer;
@@ -67,11 +68,9 @@ impl PeerSession {
             tx.send(PeerFrame::Auth { token }).ok();
         }
 
-        let recent_spots = self.state.recent(50).await;
-        for spot in recent_spots {
-            let mut spot = spot.clone();
-            spot.hop = spot.hop.saturating_add(1);
-            tx.send(PeerFrame::Spot { spot }).ok();
+        if auth_ok.load(Ordering::Relaxed) {
+            initial_sync_sent.store(true, Ordering::Relaxed);
+            send_recent_spots(&self.state, &tx).await;
         }
 
         let heartbeat_interval = self.options.heartbeat_interval.max(Duration::from_secs(1));
@@ -141,6 +140,7 @@ impl PeerSession {
                             &state,
                             &remote_id,
                             &auth_ok,
+                            &initial_sync_sent,
                             &tx,
                             self.options.expected_auth_token.as_deref(),
                         ).await?;
@@ -167,11 +167,21 @@ async fn should_forward(
     true
 }
 
+async fn send_recent_spots(state: &NodeState, tx: &mpsc::UnboundedSender<PeerFrame>) {
+    let recent_spots = state.recent(50).await;
+    for spot in recent_spots {
+        let mut spot = spot.clone();
+        spot.hop = spot.hop.saturating_add(1);
+        let _ = tx.send(PeerFrame::Spot { spot });
+    }
+}
+
 async fn handle_frame(
     frame: PeerFrame,
     state: &NodeState,
     remote_id: &Arc<RwLock<Option<NodeId>>>,
     auth_ok: &Arc<AtomicBool>,
+    initial_sync_sent: &Arc<AtomicBool>,
     tx: &mpsc::UnboundedSender<PeerFrame>,
     expected_auth_token: Option<&str>,
 ) -> io::Result<()> {
@@ -191,6 +201,9 @@ async fn handle_frame(
                 ));
             }
             auth_ok.store(true, Ordering::Relaxed);
+            if !initial_sync_sent.swap(true, Ordering::Relaxed) {
+                send_recent_spots(state, tx).await;
+            }
         }
         PeerFrame::Spot { mut spot } => {
             if !auth_ok.load(Ordering::Relaxed) {
