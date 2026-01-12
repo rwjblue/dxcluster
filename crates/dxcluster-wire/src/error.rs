@@ -24,4 +24,6 @@ pub enum PeerParseError {
     Unknown,
     #[error("frame missing {0}")]
     Missing(&'static str),
+    #[error("frame invalid: {0}")]
+    Invalid(&'static str),
 }

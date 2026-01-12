@@ -12,3 +12,4 @@ peer_protocol_v1 = []
 dxcluster-types = { path = "../dxcluster-types" }
 dxcluster-model = { path = "../dxcluster-model" }
 thiserror = { workspace = true }
+time = { workspace = true }

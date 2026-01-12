@@ -23,6 +23,20 @@ All crates live under the [`crates/`](crates) directory:
   - `cargo check` to verify the workspace builds.
   - `cargo fmt` before submitting substantial Rust changes.
 
+## Node binary configuration
+
+The `dxcluster-node-bin` binary accepts flags to configure user and peer
+listeners, outbound peers, and retry behavior:
+
+- `--user-listen <addr>`: TCP address for user sessions (default `0.0.0.0:7300`).
+- `--peer-listen <addr>`: TCP address for inbound peer links.
+- `--peer <addr>`: repeatable outbound peer address list.
+- `--peer-retry-base-ms <ms>` / `--peer-retry-max-ms <ms>`: backoff settings for
+  reconnecting to outbound peers.
+- `--peer-heartbeat-ms <ms>`: heartbeat interval for peer links.
+- `--peer-auth-token <token>`: optional auth token to present to outbound peers.
+- `--peer-expected-token <token>`: optional auth token required from inbound peers.
+
 ## How this project compares to classic DX Cluster systems
 
 Classic DX Cluster software (e.g., DXSpider, AR-Cluster, and related implementations described at [dxcluster.org](https://www.dxcluster.org)) focuses on telnet-based interactive shells that exchange DX spots, private messages, and node-to-node traffic. Our goal is protocol compatibility with those ecosystems while modernizing the stack for easier deployment and scaling:

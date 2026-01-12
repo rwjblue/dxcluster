@@ -18,7 +18,7 @@ thiserror = { version = "1" }
 blake3 = { version = "1" }
 time = { version = "0.3", features = ["macros"] }
 serde = { version = "1", features = ["derive"] }
-tokio = { version = "1", features = ["net", "io-util", "macros", "rt", "rt-multi-thread", "sync"] }
+tokio = { version = "1", features = ["net", "io-util", "macros", "rt", "rt-multi-thread", "sync", "time"] }
 tokio-util = { version = "0.7" }
 futures = { version = "0.3" }
 tracing = { version = "0.1" }
