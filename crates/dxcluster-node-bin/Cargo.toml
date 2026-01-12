@@ -9,3 +9,4 @@ tracing-subscriber = "0.3"
 dxcluster-types = { path = "../dxcluster-types" }
 tokio = { workspace = true }
 anyhow = { workspace = true }
+clap = { workspace = true, features = ["derive"] }

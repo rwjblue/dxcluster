@@ -1,6 +1,6 @@
 use std::net::{SocketAddr, TcpListener};
 
-use dxcluster_node::{Node, NodeConfig};
+use dxcluster_node::{Node, NodeConfig, PeerOptions, PeerRetryPolicy};
 use dxcluster_types::NodeId;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader};
 use tokio::net::TcpStream;
@@ -36,6 +36,8 @@ async fn user_can_submit_and_query_spot() {
         user_listen: addr,
         peer_listen: None,
         node_id: NodeId("test-node".into()),
+        peer_options: PeerOptions::default(),
+        peer_retry: PeerRetryPolicy::default(),
     };
 
     let handle = Node::builder(config).spawn().await.expect("spawn node");
@@ -75,6 +77,8 @@ async fn heartbeat_and_filters_reported() {
         user_listen: addr,
         peer_listen: None,
         node_id: NodeId("test-node".into()),
+        peer_options: PeerOptions::default(),
+        peer_retry: PeerRetryPolicy::default(),
     };
 
     let handle = Node::builder(config).spawn().await.expect("spawn node");

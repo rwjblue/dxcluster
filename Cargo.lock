@@ -218,6 +218,7 @@ name = "dxcluster-node-bin"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "clap",
  "dxcluster-node",
  "dxcluster-types",
  "tokio",
@@ -240,6 +241,7 @@ dependencies = [
  "dxcluster-model",
  "dxcluster-types",
  "thiserror",
+ "time",
 ]
 
 [[package]]
